@@ -11,7 +11,17 @@ import com.bernardguiang.todo_list.DAO.TaskDao;
 import com.bernardguiang.todo_list.Model.Task;
 
 /**
- * Created by berna on 1/24/2018.
+ * This class defines the database used by the app with the @Database annotation. You must include
+ *   all the Entity Classes and the Version number of the database
+ * The database is saved on the device, inside the folder for this Application. Uninstalling the
+ *   application also removes the database from the device
+ * When Creating a new Version of the Database (By adding/removing columns and Entity classes) a
+ *   Database Migration function has to be defined to transform the older database into the newer
+ *   version. You only need to worry about this when your app is in production
+ *
+ * Important: You should follow the singleton design pattern when instantiating an AppDatabase
+ *   object, as each RoomDatabase instance is fairly expensive, and you rarely need access to
+ *   multiple instances.
  */
 
 @Database(entities = {Task.class}, version = 1)

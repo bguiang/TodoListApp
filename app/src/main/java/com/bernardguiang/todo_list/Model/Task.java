@@ -5,7 +5,13 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
- * Created by berna on 1/24/2018.
+ * The @Entity annotation defines a table in the database where Objects of this Class can be stored
+ * The @PrimaryKey sets a variable as the table's primary key. Adding autoGenerate = true lets Room
+ *   autogenerate primary keys by incrementing the highest primary key
+ * The @ColumnInfo annotation creates the column in which the variable is stored. If no name is
+ *   defined, it will use the variable's name for the column name.
+ *
+ * Important: Room requires all saved/stored variables have a getter and a setter
  */
 
 @Entity(tableName = "tasks")

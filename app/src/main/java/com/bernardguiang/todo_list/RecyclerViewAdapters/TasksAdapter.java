@@ -20,7 +20,7 @@ import com.bernardguiang.todo_list.R;
 import java.util.List;
 
 /**
- * Created by berna on 1/28/2018.
+ * This adapter handles both In Progress and Finished Tasks
  */
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>

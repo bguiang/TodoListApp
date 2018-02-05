@@ -11,7 +11,15 @@ import com.bernardguiang.todo_list.Model.Task;
 import java.util.List;
 
 /**
- * Created by berna on 1/24/2018.
+ * Task Data Access Object (DAO) interface lets us access the data in the database
+ * Room automatically implements the queries defined in the @Query annotated functions.
+ * The @Update annotation updates the Object in the Database associated with the primary key of the
+ *   Object passed into the function
+ * The @Insert annotation inserts a new row in the Database using the Object passed in.
+ * The @Delete annotation deletes the Object in the Database associated with the primary key of the
+ *   Object passed into the function
+ *
+ * Important: The database query functions of this DAO CANNOT be called in the main thread
  */
 
 @Dao

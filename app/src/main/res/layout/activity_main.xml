@@ -26,5 +26,9 @@
         android:onClick="newTaskClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Task"/>
+        android:text="New Task"
+        android:fontFamily="@font/roboto_medium"
+        android:textSize="14sp"
+
+        />
 </LinearLayout>

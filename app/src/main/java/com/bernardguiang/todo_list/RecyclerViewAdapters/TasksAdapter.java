@@ -31,6 +31,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>
     Context context;
     List<Task> data;
     LayoutInflater layoutInflater;
+    AppDatabase db;
 
     public TasksAdapter(Context context, List<Task> data)
     {
@@ -38,6 +39,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>
         this.data = data;
 
         layoutInflater = LayoutInflater.from(context);
+
+        db = AppDatabase.getDatabase(context);
     }
 
     @Override
@@ -65,17 +68,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>
             holder.finishBtn.setVisibility(View.GONE);
         }
         holder.setDescriptionViewText(currentItem.getDescription());
-        holder.setViewTags(position);
     }
 
     @Override
     public int getItemCount() {
         return data.size();
-    }
-
-    public Task getItemAtPosition(int position)
-    {
-        return data.get(position);
     }
 
     public void removeItemAtPosition(int position)
@@ -102,33 +99,83 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>
             deleteBtn = itemView.findViewById(R.id.deleteButton);
             finishBtn = itemView.findViewById(R.id.finishButton);
 
-            //descriptionTV.setVisibility(View.GONE);
-            //deleteBtn.setVisibility(View.GONE);
-            //finishBtn.setVisibility(View.GONE);
-
-            //TODO: add Swipe lenft and right functionality and just remove the finish button
-            /*itemView.setOnTouchListener(new OnSwipeTouchListener(context)
-            {
-                public void onSwipeRight() {
-                    Toast.makeText(context, "right: " + titleTV.getText().toString(), Toast.LENGTH_SHORT).show();
-                    *//*if(c.getStatus() == Task.IN_PROGRESS)
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(finishBtn.getVisibility() == View.GONE && deleteBtn.getVisibility() == View.GONE)
                     {
-                        setColor(GREEN);
-                        currentTask.setStatus(Task.FINISHED);
-                        updateTask();
-                    }*//*
-                }
+                        titleTV.setSingleLine(false);
+                        descriptionTV.setSingleLine(false);
 
-                public void onSwipeLeft() {
-                    Toast.makeText(context, "left: " + titleTV.getText().toString(), Toast.LENGTH_SHORT).show();
-                    *//*if(currentTask.getStatus() == Task.FINISHED)
+                        descriptionTV.setVisibility(View.VISIBLE);
+                        deleteBtn.setVisibility(View.VISIBLE);
+
+                        //Only Show Finish Button on Tasks that are In-Progress
+                        if(data.get(getAdapterPosition()).getStatus() ==  Task.IN_PROGRESS)
+                            finishBtn.setVisibility(View.VISIBLE);
+                    }
+                    else
                     {
-                        setColor(ORANGE);
-                        currentTask.setStatus(Task.IN_PROGRESS);
-                        updateTask();
-                    }*//*
+                        titleTV.setSingleLine(true);
+                        descriptionTV.setSingleLine(true);
+                        titleTV.setMaxLines(1);
+                        descriptionTV.setMaxLines(1);
+
+                        descriptionTV.setVisibility(View.GONE);
+                        deleteBtn.setVisibility(View.GONE);
+                        finishBtn.setVisibility(View.GONE);
+                    }
                 }
-            });*/
+            });
+
+            finishBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    int position = getAdapterPosition();
+
+                    final Task taskToFinish = data.get(position);
+                    taskToFinish.setStatus(Task.FINISHED);
+
+                    Thread updateTask = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            db.taskDao().updateTask(taskToFinish);
+                        }
+                    });
+                    updateTask.start();
+                    try {
+                        updateTask.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    removeItemAtPosition(position);
+                }
+            });
+
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    final Task taskToDelete = data.get(position);
+
+                    Thread deleteTask = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            db.taskDao().deleteTask(taskToDelete);
+                        }
+                    });
+                    deleteTask.start();
+                    try {
+                        deleteTask.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    removeItemAtPosition(position);
+                }
+            });
         }
 
         public void setColor(int color)
@@ -154,14 +201,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>
         public void setDescriptionViewText(String description)
         {
             descriptionTV.setText(description);
-        }
-
-        public void setViewTags(int position)
-        {
-            titleTV.setTag(position);
-            descriptionTV.setTag(position);
-            deleteBtn.setTag(position);
-            finishBtn.setTag(position);
         }
     }
 }

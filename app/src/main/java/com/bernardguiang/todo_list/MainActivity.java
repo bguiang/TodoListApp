@@ -129,8 +129,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
     public void newTaskClick(View view)
     {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
@@ -164,84 +162,6 @@ public class MainActivity extends AppCompatActivity
         builder.setNegativeButton("Cancel", null);
         builder.setCancelable(false);
         builder.show();
-    }
-
-
-    public void taskClick(View view)
-    {
-        TextView titleTV = view.findViewById(R.id.title);
-        TextView descriptionTV = view.findViewById(R.id.description);
-        ImageButton deleteBtn = view.findViewById(R.id.deleteButton);
-        Button finishBtn = view.findViewById(R.id.finishButton);
-
-        if(finishBtn.getVisibility() == View.GONE && deleteBtn.getVisibility() == View.GONE)
-        {
-            titleTV.setSingleLine(false);
-            descriptionTV.setSingleLine(false);
-
-            //descriptionTV.setVisibility(View.VISIBLE);
-            deleteBtn.setVisibility(View.VISIBLE);
-            //Only Show Finish Button on Tasks that are In-Progress
-            if(displayStatus == Task.IN_PROGRESS)
-                finishBtn.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            titleTV.setSingleLine(true);
-            descriptionTV.setSingleLine(true);
-
-            ViewGroup.LayoutParams params = titleTV.getLayoutParams();
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            titleTV.setLayoutParams(params);
-
-            //descriptionTV.setVisibility(View.GONE);
-            deleteBtn.setVisibility(View.GONE);
-            finishBtn.setVisibility(View.GONE);
-        }
-    }
-
-    public void finishClick(View view)
-    {
-        int position = (int) view.getTag();
-
-        final Task taskToFinish = tasksAdapter.getItemAtPosition(position);
-        taskToFinish.setStatus(Task.FINISHED);
-
-        Thread updateTask = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                db.taskDao().updateTask(taskToFinish);
-            }
-        });
-        updateTask.start();
-        try {
-            updateTask.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        tasksAdapter.removeItemAtPosition(position);
-    }
-
-    public void deleteClick(View view)
-    {
-        int position = (int) view.getTag();
-        final Task taskToDelete = tasksAdapter.getItemAtPosition(position);
-
-        Thread deleteTask = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                db.taskDao().deleteTask(taskToDelete);
-            }
-        });
-        deleteTask.start();
-        try {
-            deleteTask.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        tasksAdapter.removeItemAtPosition(position);
     }
 
     public void inProgressTasksClick(View view)

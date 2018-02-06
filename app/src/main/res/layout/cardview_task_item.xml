@@ -10,70 +10,75 @@
     app:cardUseCompatPadding="true"
     android:onClick="taskClick"
     >
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
         >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_regular"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="title"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="title"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_regular"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="description"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/finishButton"
-            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
+            <ImageButton
+                android:visibility="gone"
+                android:id="@+id/deleteButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="#00FFFFFF"
+                android:src="@drawable/ic_clear_black_24dp" />
 
-        <ImageButton
-            android:visibility="gone"
-            android:onClick="deleteClick"
-            android:id="@+id/deleteButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="#00FFFFFF"
-            android:src="@drawable/ic_clear_black_24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
-        <Button
-            android:visibility="gone"
-            android:onClick="finishClick"
-            android:id="@+id/finishButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="FINISH"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="description"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/finishButton"
+                app:layout_constraintTop_toTopOf="parent" />
 
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/finishButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="FINISH"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

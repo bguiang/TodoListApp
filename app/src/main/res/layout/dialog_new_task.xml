@@ -7,14 +7,16 @@
     android:padding="24dp">
 
     <TextView
+        android:fontFamily="@font/roboto_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="New Task"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
     <EditText
         android:id="@+id/newTaskTitle"
+        android:fontFamily="@font/roboto_regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Title"
@@ -22,6 +24,7 @@
         />
     <EditText
         android:id="@+id/newTaskDescription"
+        android:fontFamily="@font/roboto_regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Description (optional)"

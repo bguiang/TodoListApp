@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity
     private TasksAdapter tasksAdapter;
     List<Task> tasks;
     Toolbar toolbar; //Custom support v7 library toolbar
-    TextView inProgressTV, finishedTV;
+    TabLayout toolbarTabLayout;
+    TabLayout.Tab inProgressTab, finishedTab;
 
     int displayStatus;
 
@@ -48,12 +50,42 @@ public class MainActivity extends AppCompatActivity
         context = this;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTabLayout = toolbar.findViewById(R.id.tabLayout);
+        toolbarTabLayout.setVisibility(View.VISIBLE);
+        inProgressTab = toolbarTabLayout.newTab();
+        inProgressTab.setText("In Progress");
+        finishedTab = toolbarTabLayout.newTab();
+        finishedTab.setText("Finished");
+        toolbarTabLayout.addTab(inProgressTab);
+        toolbarTabLayout.addTab(finishedTab);
+        toolbarTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getText().toString().equalsIgnoreCase("In Progress")) {
+                    selectTasks(Task.IN_PROGRESS);
+                    toolbarTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.appOrange));
+                }
+                else {
+                    selectTasks(Task.FINISHED);
+                    toolbarTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.appGreen));
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
 
         tasksRV = (RecyclerView) findViewById(R.id.tasksRV);
 
         db = AppDatabase.getDatabase(context);
-        inProgressTV = toolbar.findViewById(R.id.inProgressTV);
-        finishedTV = toolbar.findViewById(R.id.finishedTV);
 
         displayStatus = Task.IN_PROGRESS;
         selectTasks(displayStatus);
@@ -91,18 +123,6 @@ public class MainActivity extends AppCompatActivity
     public void selectTasks(int status)
     {
         displayStatus = status;
-
-        if(status == Task.IN_PROGRESS)
-        {
-            inProgressTV.setTextColor(getResources().getColor(R.color.appOrange));
-            finishedTV.setTextColor(getResources().getColor(R.color.white));
-        }
-        else
-        {
-            finishedTV.setTextColor(getResources().getColor(R.color.appGreen));
-            inProgressTV.setTextColor(getResources().getColor(R.color.white));
-        }
-
         loadTasksWithStatus(status);
     }
 
@@ -162,16 +182,6 @@ public class MainActivity extends AppCompatActivity
         builder.setNegativeButton("Cancel", null);
         builder.setCancelable(false);
         builder.show();
-    }
-
-    public void inProgressTasksClick(View view)
-    {
-        selectTasks(Task.IN_PROGRESS);
-    }
-
-    public void finishedTasksClick(View view)
-    {
-        selectTasks(Task.FINISHED);
     }
 
 }

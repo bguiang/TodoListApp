@@ -6,12 +6,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +44,11 @@ public class MainActivity extends AppCompatActivity
     TabLayout toolbarTabLayout;
     TabLayout.Tab inProgressTab, finishedTab;
 
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    boolean navigationDrawerOpen;
+
+
     int displayStatus;
 
     @Override
@@ -49,6 +58,7 @@ public class MainActivity extends AppCompatActivity
 
         context = this;
 
+        //Toolbar Setup
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTabLayout = toolbar.findViewById(R.id.tabLayout);
         toolbarTabLayout.setVisibility(View.VISIBLE);
@@ -82,13 +92,53 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //Navigation Drawer Setup
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        navigationDrawerOpen = false;
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
 
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                navigationDrawerOpen = true;
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                navigationDrawerOpen = false;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+
+        //Task List Setup
         tasksRV = (RecyclerView) findViewById(R.id.tasksRV);
-
         db = AppDatabase.getDatabase(context);
-
         displayStatus = Task.IN_PROGRESS;
         selectTasks(displayStatus);
+    }
+
+    public void menuClick(View view)
+    {
+        toggleNavigationDrawer();
+    }
+
+    public void toggleNavigationDrawer()
+    {
+        if(navigationDrawerOpen)
+        {
+            drawerLayout.closeDrawer(Gravity.LEFT);
+        }
+        else
+        {
+            drawerLayout.openDrawer(Gravity.LEFT);
+        }
     }
 
     public void loadTasksWithStatus(final int status)
